@@ -1,6 +1,6 @@
-import { View, Text } from 'react-native';
 import React from 'react';
 import { Button } from 'react-native-elements';
+import { useTheme } from '@react-navigation/native';
 
 type Props = {
     type?: 'solid' | 'clear' | 'outline' | undefined;
@@ -10,15 +10,15 @@ type Props = {
 };
 
 function ButtonCustom({ type = 'solid', title, iconName, onPress }: Props) {
+    const { colors } = useTheme();
     return (
         <Button
             type={type}
             title={title}
             icon={{
                 name: iconName,
-                type: 'font-awesome',
-                size: 15,
-                color: 'white',
+                size: 20,
+                color: colors.text,
             }}
             onPress={onPress}
         />

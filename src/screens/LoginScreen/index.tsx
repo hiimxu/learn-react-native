@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme } from '@react-navigation/native';
 import { View, Text } from 'react-native';
-import { Input, Image, Button } from 'react-native-elements';
+import { Input, Button } from 'react-native-elements';
 import styled from 'styled-components';
 
 //Redux
