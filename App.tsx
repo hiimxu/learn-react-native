@@ -8,6 +8,7 @@ import {
     DarkTheme,
 } from '@react-navigation/native';
 import { useColorScheme } from 'react-native';
+import { Provider as PaperProvider } from 'react-native-paper';
 
 //SCREEN
 import MainScreen from './src/screens/MainSceen';
@@ -26,14 +27,18 @@ export default function App() {
         <SafeAreaProvider>
             <Provider store={store}>
                 <PersistGate persistor={persistor}>
-                    <ThemeProvider>
-                        <NavigationContainer
-                            theme={scheme === 'dark' ? DarkTheme : DefaultTheme}
-                        >
-                            <MainScreen />
-                            <StatusBar />
-                        </NavigationContainer>
-                    </ThemeProvider>
+                    <PaperProvider>
+                        <ThemeProvider>
+                            <NavigationContainer
+                                theme={
+                                    scheme === 'dark' ? DarkTheme : DefaultTheme
+                                }
+                            >
+                                <MainScreen />
+                                <StatusBar />
+                            </NavigationContainer>
+                        </ThemeProvider>
+                    </PaperProvider>
                 </PersistGate>
             </Provider>
         </SafeAreaProvider>

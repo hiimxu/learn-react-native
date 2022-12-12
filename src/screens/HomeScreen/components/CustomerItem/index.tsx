@@ -1,9 +1,11 @@
 import React from 'react';
 import { ListItem, Icon } from 'react-native-elements';
 import { Button } from '@rneui/themed';
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { View } from 'react-native';
 import { VStack, Box } from '@react-native-material/core';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParams } from '../../../Models/route';
 
 type Props = {
     customer?: {
@@ -19,11 +21,18 @@ function CustomerItem({ customer }: Props) {
     //State
     const [expanded, setExpanded] = React.useState<boolean>(false);
 
+    //Hooks
+    const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
+
     //Theme
     const { colors } = useTheme();
 
-    //handle
-    const editCustomer = () => {};
+    const handleEdit = (id: number, name: string | undefined) => {
+        navigation.navigate('EditCustomer', {
+            userId: id,
+            name: name,
+        });
+    };
 
     return (
         <ListItem.Accordion
@@ -72,11 +81,33 @@ function CustomerItem({ customer }: Props) {
                 </ListItem.Content>
                 <VStack spacing={10}>
                     <Box>
-                        <Button>Edit</Button>
+                        <Button
+                            onPress={() =>
+                                handleEdit(
+                                    Number(customer?.id),
+                                    customer?.firstName,
+                                )
+                            }
+                        >
+                            <Icon
+                                size={20}
+                                name="edit"
+                                color="white"
+                                tvParallaxProperties={undefined}
+                            />{' '}
+                            Edit
+                        </Button>
                     </Box>
-
                     <Box>
-                        <Button color="error">Delete</Button>
+                        <Button color="error">
+                            <Icon
+                                size={20}
+                                name="delete"
+                                color="white"
+                                tvParallaxProperties={undefined}
+                            />{' '}
+                            Delete
+                        </Button>
                     </Box>
                 </VStack>
             </ListItem>

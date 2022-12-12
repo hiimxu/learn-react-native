@@ -33,7 +33,7 @@ const Navbar: React.FC = () => {
                     return (
                         <Icon
                             name={iconName}
-                            size={32}
+                            size={30}
                             color={color}
                             tvParallaxProperties={undefined}
                         />
@@ -42,9 +42,22 @@ const Navbar: React.FC = () => {
                 tabBarLabel: () => undefined,
                 tabBarActiveTintColor: '#52aff7',
                 tabBarInactiveTintColor: 'gray',
+                headerTitleStyle: {
+                    lineHeight: 100,
+                },
+                headerStyle: {
+                    height: 80,
+                },
+                headerTitleAlign: 'center',
             })}
         >
-            <Tab.Screen name="Customer" component={HomeScreen} />
+            <Tab.Screen
+                name="Customer"
+                options={{
+                    title: 'Manage Customer',
+                }}
+                component={HomeScreen}
+            />
             <Tab.Screen name="Product" component={ProductScreen} />
             <Tab.Screen name="Service" component={ServiceScreen} />
             <Tab.Screen name="Options" component={ProfileScreen} />
