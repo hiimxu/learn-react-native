@@ -8,8 +8,9 @@ import LoginScreen from '../LoginScreen';
 import EditCustomer from '../HomeScreen/components/EditCustomer';
 
 //Type
-import { RootStackParams } from '../Models/route';
+import { RootStackParams } from '../../models/route';
 import AddCustomer from '../HomeScreen/components/AddCustomer';
+import SettingScreen from '../SettingScreen';
 
 const Stack = createNativeStackNavigator<RootStackParams>();
 
@@ -36,6 +37,13 @@ export default function MainScreen() {
                         headerTitle: 'Add Customer',
                     }}
                     component={AddCustomer}
+                />
+                <Stack.Screen
+                    name="Setting"
+                    options={{
+                        headerTitle: 'Setting & Privacy',
+                    }}
+                    component={SettingScreen}
                 />
             </Stack.Navigator>
         );

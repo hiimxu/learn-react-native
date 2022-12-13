@@ -1,7 +1,12 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { RouteProp, useRoute, useTheme } from '@react-navigation/native';
+import {
+    RouteProp,
+    useNavigation,
+    useRoute,
+    useTheme,
+} from '@react-navigation/native';
 import { Input, Button } from 'react-native-elements';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -9,6 +14,9 @@ import styled from 'styled-components';
 
 //data mockup
 import { CUSTOMERS_LIST } from '../../../../shared/data/customers';
+import SuccessDialog from '../../../../components/SuccessDialog';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParams } from '../../../../models/route';
 
 const Wrapper = styled(View)`
     padding: 20px 10px;
@@ -36,6 +44,9 @@ type Customer = {
 };
 
 export default function EditCustomer() {
+    //Dialog
+    const [successDialog, setSuccessDialog] = React.useState<boolean>(false);
+
     //Get params
     const { params } = useRoute<RouteProp<ParamList, 'EditCustomer'>>();
     const { userId, name } = params;
@@ -44,6 +55,9 @@ export default function EditCustomer() {
         const result = CUSTOMERS_LIST.find((user: Customer) => user.id === id);
         return result;
     };
+
+    //Navigation
+    const { navigate } = useNavigation<StackNavigationProp<RootStackParams>>();
 
     //Form data
     const {
@@ -63,13 +77,27 @@ export default function EditCustomer() {
     const addressRef = React.createRef<TextInput>();
 
     //Edit customer
-
     const onSubmit = (data: Customer) => {
         console.log(data);
+        setSuccessDialog(true);
+    };
+
+    //Handle Dialog
+    const handleCloseSuccessDialog = () => {
+        setSuccessDialog(false);
+        navigate('Home');
     };
 
     return (
         <React.Fragment>
+            <React.Fragment>
+                <SuccessDialog
+                    isVisible={successDialog}
+                    content={`Edit customer ${name} successfully!`}
+                    onPress={handleCloseSuccessDialog}
+                />
+            </React.Fragment>
+
             {name && (
                 <TextCustomerInfo style={{ color: colors.text }}>
                     {name}

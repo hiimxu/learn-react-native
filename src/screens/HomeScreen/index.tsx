@@ -10,7 +10,14 @@ import styled from 'styled-components';
 import { CUSTOMERS_LIST } from '../../shared/data/customers';
 import { Icon } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParams } from '../Models/route';
+import { RootStackParams } from '../../models/route';
+
+//Redux
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    getListCustomer,
+    resetListCustomer,
+} from '../../redux/actions/creators/customer';
 
 const FillterWrapper = styled(View)`
     display: flex;
@@ -20,9 +27,22 @@ const FillterWrapper = styled(View)`
 `;
 
 export default function HomeScreen() {
+    //Redux state
+    const { data } = useSelector((state: any) => state.customerList);
+
     const { colors } = useTheme();
 
     const { navigate } = useNavigation<StackNavigationProp<RootStackParams>>();
+
+    const dispatch = useDispatch();
+
+    React.useEffect(() => {
+        dispatch(resetListCustomer());
+        dispatch(getListCustomer());
+        if (data) {
+            console.log(data[0]?.name);
+        }
+    }, []);
 
     return (
         <React.Fragment>

@@ -3,9 +3,12 @@ import { View, ScrollView } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { TextInput } from 'react-native-gesture-handler';
 import { useForm, Controller } from 'react-hook-form';
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 
 import styled from 'styled-components';
+import SuccessDialog from '../../../../components/SuccessDialog';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParams } from '../../../../models/route';
 
 const InputWrapper = styled(View)`
     padding: 20px 10px;
@@ -19,6 +22,8 @@ type FormData = {
 };
 
 export default function AddCustomer() {
+    const [successDialog, setSuccessDialog] = React.useState<boolean>(false);
+
     //Form data
     const {
         control,
@@ -29,6 +34,9 @@ export default function AddCustomer() {
     //Theme
     const { colors } = useTheme();
 
+    //Navigation
+    const { navigate } = useNavigation<StackNavigationProp<RootStackParams>>();
+
     //Ref
     const lNameRef = React.createRef<TextInput>();
     const pNumberRef = React.createRef<TextInput>();
@@ -37,10 +45,22 @@ export default function AddCustomer() {
     //Submit
     const onSubmit = (data: FormData) => {
         console.log(data);
+        setSuccessDialog(true);
+    };
+
+    //Handle Success dialog
+    const handleCloseSuccessDialog = () => {
+        setSuccessDialog(false);
+        navigate('Home');
     };
 
     return (
         <React.Fragment>
+            <SuccessDialog
+                isVisible={successDialog}
+                content="Add new Customer successfully!"
+                onPress={handleCloseSuccessDialog}
+            />
             <ScrollView>
                 <InputWrapper>
                     <Controller

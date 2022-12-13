@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //Reducers
 import { LoginAccount } from '../reducers/auth';
+import { Theme } from '../reducers/theme';
+import { CustomerList } from '../reducers/customer';
 
 const loginConfig = {
     key: 'loginAccount',
@@ -15,6 +17,8 @@ const loginConfig = {
 
 const rootReducer = combineReducers({
     loginAccount: persistReducer(loginConfig, LoginAccount),
+    theme: Theme,
+    customerList: CustomerList,
 });
 
 export const ConfigureStore = () => {

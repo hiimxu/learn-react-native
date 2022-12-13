@@ -1,27 +1,41 @@
 import React from 'react';
-import { Button } from 'react-native-elements';
-import { useTheme } from '@react-navigation/native';
+import { Icon } from 'react-native-elements';
+import { Text, TouchableOpacity } from 'react-native';
+import styled from 'styled-components';
+
+const ButtonWrapper = styled(TouchableOpacity)`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 15px 20px;
+    margin: 10px;
+    border-radius: 10px;
+    background-color: gray;
+`;
+
+const Title = styled(Text)`
+    font-size: 18px;
+    font-weight: 700;
+    margin-left: 10px;
+    color: white;
+`;
 
 type Props = {
-    type?: 'solid' | 'clear' | 'outline' | undefined;
     title: string;
     iconName?: string;
     onPress?: () => void;
 };
 
-function ButtonCustom({ type = 'solid', title, iconName, onPress }: Props) {
-    const { colors } = useTheme();
+function ButtonCustom({ title, iconName, onPress }: Props) {
     return (
-        <Button
-            type={type}
-            title={title}
-            icon={{
-                name: iconName,
-                size: 20,
-                color: colors.text,
-            }}
-            onPress={onPress}
-        />
+        <ButtonWrapper onPress={onPress}>
+            <Icon
+                tvParallaxProperties={undefined}
+                name={iconName ? iconName : ''}
+                color="white"
+            />
+            <Title>{title}</Title>
+        </ButtonWrapper>
     );
 }
 export default ButtonCustom;

@@ -5,7 +5,9 @@ import { useNavigation, useTheme } from '@react-navigation/native';
 import { View } from 'react-native';
 import { VStack, Box } from '@react-native-material/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParams } from '../../../Models/route';
+import { RootStackParams } from '../../../../models/route';
+import ConfirmDialog from '../../../../components/ConfirmDialog';
+import SuccessDialog from '../../../../components/SuccessDialog';
 
 type Props = {
     customer?: {
@@ -21,6 +23,10 @@ function CustomerItem({ customer }: Props) {
     //State
     const [expanded, setExpanded] = React.useState<boolean>(false);
 
+    //Dialog
+    const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
+    const [successDialog, setSuccessDialog] = React.useState<boolean>(false);
+
     //Hooks
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
 
@@ -34,84 +40,114 @@ function CustomerItem({ customer }: Props) {
         });
     };
 
+    //Handle dialog
+    const handleConfirmDelete = () => {
+        setSuccessDialog(true);
+    };
+
+    const handleCloseSuccessDialog = () => {
+        setSuccessDialog(false);
+        setDeleteDialog(false);
+    };
+
     return (
-        <ListItem.Accordion
-            content={
-                <React.Fragment>
-                    <View style={{ marginRight: 10 }}>
-                        <Icon
-                            name="person"
-                            size={30}
-                            tvParallaxProperties={undefined}
-                            color="#0d80d8"
-                        />
-                    </View>
-                    <ListItem.Content>
-                        <ListItem.Title>
-                            {customer?.firstName} {customer?.lastName}
-                        </ListItem.Title>
-                    </ListItem.Content>
-                </React.Fragment>
-            }
-            isExpanded={expanded}
-            onPress={() => {
-                setExpanded(!expanded);
-            }}
-            hasTVPreferredFocus={undefined}
-            tvParallaxProperties={undefined}
-        >
-            <ListItem
-                bottomDivider
+        <React.Fragment>
+            <React.Fragment>
+                <ConfirmDialog
+                    isVisible={deleteDialog}
+                    icon="delete"
+                    title="Delete customer"
+                    content="Do you want delete this customer?"
+                    onClose={() => setDeleteDialog(false)}
+                    onConfirm={handleConfirmDelete}
+                />
+                <SuccessDialog
+                    isVisible={successDialog}
+                    content={`Delete customer ${customer?.firstName} ${customer?.lastName} successfully!`}
+                    onPress={handleCloseSuccessDialog}
+                />
+            </React.Fragment>
+            <ListItem.Accordion
+                content={
+                    <React.Fragment>
+                        <View style={{ marginRight: 10 }}>
+                            <Icon
+                                name="person"
+                                size={30}
+                                tvParallaxProperties={undefined}
+                                color="#0d80d8"
+                            />
+                        </View>
+                        <ListItem.Content>
+                            <ListItem.Title>
+                                {customer?.firstName} {customer?.lastName}
+                            </ListItem.Title>
+                        </ListItem.Content>
+                    </React.Fragment>
+                }
+                isExpanded={expanded}
+                onPress={() => {
+                    setExpanded(!expanded);
+                }}
                 hasTVPreferredFocus={undefined}
                 tvParallaxProperties={undefined}
             >
-                <ListItem.Content>
-                    <ListItem.Title>
-                        First Name: {customer?.firstName}
-                    </ListItem.Title>
-                    <ListItem.Title>
-                        Last Name: {customer?.lastName}
-                    </ListItem.Title>
-                    <ListItem.Subtitle>
-                        Phone: {customer?.phone}
-                    </ListItem.Subtitle>
-                    <ListItem.Subtitle>
-                        Address: {customer?.address}
-                    </ListItem.Subtitle>
-                </ListItem.Content>
-                <VStack spacing={10}>
-                    <Box>
-                        <Button
-                            onPress={() =>
-                                handleEdit(
-                                    Number(customer?.id),
-                                    customer?.firstName,
-                                )
-                            }
-                        >
-                            <Icon
-                                size={20}
-                                name="edit"
-                                color="white"
-                                tvParallaxProperties={undefined}
-                            />{' '}
-                            Edit
-                        </Button>
-                    </Box>
-                    <Box>
-                        <Button color="error">
-                            <Icon
-                                size={20}
-                                name="delete"
-                                color="white"
-                                tvParallaxProperties={undefined}
-                            />{' '}
-                            Delete
-                        </Button>
-                    </Box>
-                </VStack>
-            </ListItem>
-        </ListItem.Accordion>
+                <ListItem
+                    bottomDivider
+                    hasTVPreferredFocus={undefined}
+                    tvParallaxProperties={undefined}
+                >
+                    <ListItem.Content>
+                        <ListItem.Title>
+                            First Name: {customer?.firstName}
+                        </ListItem.Title>
+                        <ListItem.Title>
+                            Last Name: {customer?.lastName}
+                        </ListItem.Title>
+                        <ListItem.Subtitle>
+                            Phone: {customer?.phone}
+                        </ListItem.Subtitle>
+                        <ListItem.Subtitle>
+                            Address: {customer?.address}
+                        </ListItem.Subtitle>
+                    </ListItem.Content>
+                    <VStack spacing={10}>
+                        <Box>
+                            <Button
+                                onPress={() =>
+                                    handleEdit(
+                                        Number(customer?.id),
+                                        customer?.firstName,
+                                    )
+                                }
+                            >
+                                <Icon
+                                    size={20}
+                                    name="edit"
+                                    color="white"
+                                    tvParallaxProperties={undefined}
+                                />{' '}
+                                Edit
+                            </Button>
+                        </Box>
+                        <Box>
+                            <Button
+                                color="error"
+                                onPress={() => setDeleteDialog(true)}
+                            >
+                                <Icon
+                                    size={20}
+                                    name="delete"
+                                    color="white"
+                                    tvParallaxProperties={undefined}
+                                />{' '}
+                                Delete
+                            </Button>
+                        </Box>
+                    </VStack>
+                </ListItem>
+            </ListItem.Accordion>
+        </React.Fragment>
     );
 }
 export default React.memo(CustomerItem);

@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
+import { HStack, Box } from '@react-native-material/core';
 
 //Styles
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import styled from 'styled-components';
 
 //Redux
 import { useDispatch } from 'react-redux';
@@ -10,6 +12,18 @@ import { logout } from '../../redux/actions/creators/auth';
 
 //Components
 import ButtonCustom from '../../components/ButtonCustom';
+import CardWrapper from '../../components/CardWrapper';
+import MenuButton from './components/MenuButton';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParams } from '../../models/route';
+
+const ButtonWrapper = styled(HStack)`
+    padding: 10px;
+`;
+
+const ItemWrapper = styled(Box)`
+    flex: 1;
+`;
 
 export default function ProfileScreen() {
     //Hooks
@@ -17,6 +31,9 @@ export default function ProfileScreen() {
 
     //Redux
     const dispatch = useDispatch();
+
+    //Navigation
+    const { navigate } = useNavigation<StackNavigationProp<RootStackParams>>();
 
     //Handle
     const handleLogout = () => {
@@ -26,11 +43,21 @@ export default function ProfileScreen() {
     return (
         <View>
             <ScrollView>
-                <Text style={{ color: colors.text }}>Profile Screen</Text>
+                <ButtonWrapper spacing={10}>
+                    <ItemWrapper>
+                        <MenuButton
+                            icon="settings"
+                            title="Settings"
+                            onPress={() => navigate('Setting')}
+                        />
+                    </ItemWrapper>
+                    <ItemWrapper>
+                        <MenuButton icon="settings" title="Settings" />
+                    </ItemWrapper>
+                </ButtonWrapper>
                 <ButtonCustom
-                    type="clear"
                     iconName="logout"
-                    title="Log out"
+                    title="Sign Out"
                     onPress={handleLogout}
                 />
             </ScrollView>

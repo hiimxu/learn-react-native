@@ -58,9 +58,27 @@ const Navbar: React.FC = () => {
                 }}
                 component={HomeScreen}
             />
-            <Tab.Screen name="Product" component={ProductScreen} />
-            <Tab.Screen name="Service" component={ServiceScreen} />
-            <Tab.Screen name="Options" component={ProfileScreen} />
+            <Tab.Screen
+                name="Product"
+                options={{
+                    title: 'Manage Product',
+                }}
+                component={ProductScreen}
+            />
+            <Tab.Screen
+                name="Service"
+                options={{
+                    title: 'Manage Service',
+                }}
+                component={ServiceScreen}
+            />
+            <Tab.Screen
+                name="Options"
+                options={{
+                    title: 'Menu',
+                }}
+                component={ProfileScreen}
+            />
         </Tab.Navigator>
     );
 };
