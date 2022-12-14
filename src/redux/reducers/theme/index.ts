@@ -1,6 +1,6 @@
 import * as ThemeActionsType from '../../actions/types/theme';
 
-export const Theme = (state = { theme: 'light' }, action: any) => {
+export const Theme = (state = { theme: null }, action: any) => {
     switch (action.type) {
         case ThemeActionsType.LIGHT_THEME:
             return { ...state, theme: action.payload };

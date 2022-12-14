@@ -8,15 +8,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from '../../../../models/route';
 import ConfirmDialog from '../../../../components/ConfirmDialog';
 import SuccessDialog from '../../../../components/SuccessDialog';
+import { Customer } from '../../../../models/customer';
 
 type Props = {
-    customer?: {
-        id: number;
-        lastName: string;
-        firstName: string;
-        phone: string;
-        address: string;
-    };
+    customer?: Customer;
 };
 
 function CustomerItem({ customer }: Props) {
@@ -63,7 +58,7 @@ function CustomerItem({ customer }: Props) {
                 />
                 <SuccessDialog
                     isVisible={successDialog}
-                    content={`Delete customer ${customer?.firstName} ${customer?.lastName} successfully!`}
+                    content={`Delete customer ${customer?.name} successfully!`}
                     onPress={handleCloseSuccessDialog}
                 />
             </React.Fragment>
@@ -79,9 +74,7 @@ function CustomerItem({ customer }: Props) {
                             />
                         </View>
                         <ListItem.Content>
-                            <ListItem.Title>
-                                {customer?.firstName} {customer?.lastName}
-                            </ListItem.Title>
+                            <ListItem.Title>{customer?.name}</ListItem.Title>
                         </ListItem.Content>
                     </React.Fragment>
                 }
@@ -98,17 +91,18 @@ function CustomerItem({ customer }: Props) {
                     tvParallaxProperties={undefined}
                 >
                     <ListItem.Content>
-                        <ListItem.Title>
-                            First Name: {customer?.firstName}
-                        </ListItem.Title>
-                        <ListItem.Title>
-                            Last Name: {customer?.lastName}
-                        </ListItem.Title>
+                        <ListItem.Title>Name: {customer?.name}</ListItem.Title>
                         <ListItem.Subtitle>
-                            Phone: {customer?.phone}
+                            Phone: {customer?.phoneNumber}
+                        </ListItem.Subtitle>
+                        <ListItem.Subtitle>
+                            Email: {customer?.email}
                         </ListItem.Subtitle>
                         <ListItem.Subtitle>
                             Address: {customer?.address}
+                        </ListItem.Subtitle>
+                        <ListItem.Subtitle>
+                            Reason: {customer?.reason}
                         </ListItem.Subtitle>
                     </ListItem.Content>
                     <VStack spacing={10}>
@@ -117,7 +111,7 @@ function CustomerItem({ customer }: Props) {
                                 onPress={() =>
                                     handleEdit(
                                         Number(customer?.id),
-                                        customer?.firstName,
+                                        customer?.name,
                                     )
                                 }
                             >

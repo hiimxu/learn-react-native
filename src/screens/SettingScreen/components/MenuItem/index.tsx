@@ -1,12 +1,9 @@
 import { useTheme } from '@react-navigation/native';
-import { Button } from '@rneui/themed';
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-
-import { changeTheme } from '../../../../redux/actions/creators/theme';
 
 const Wrapper = styled(View)`
     display: flex;
@@ -15,9 +12,9 @@ const Wrapper = styled(View)`
 `;
 
 const Title = styled(Text)`
-    font-size: 15px;
+    font-size: 17px;
     padding-left: 10px;
-    font-weight: 500;
+    font-weight: 600;
 `;
 
 type Props = {
@@ -29,7 +26,6 @@ type Props = {
 export default function MenuItem({ icon, title, onPress }: Props) {
     //Theme
     const { colors } = useTheme();
-    const dispatch = useDispatch();
 
     return (
         <TouchableOpacity onPress={onPress}>
@@ -39,18 +35,9 @@ export default function MenuItem({ icon, title, onPress }: Props) {
                     type="font-awesome"
                     color={colors.text}
                     tvParallaxProperties={undefined}
+                    size={26}
                 />
                 <Title style={{ color: colors.text }}>{title}</Title>
-                <Button onPress={() => dispatch(changeTheme('light'))}>
-                    set light
-                </Button>
-                <Button onPress={() => dispatch(changeTheme('dark'))}>
-                    set dark
-                </Button>
-
-                <Button onPress={() => dispatch(changeTheme())}>
-                    set default
-                </Button>
             </Wrapper>
         </TouchableOpacity>
     );

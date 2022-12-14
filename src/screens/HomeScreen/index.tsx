@@ -3,13 +3,15 @@ import { View, ScrollView } from 'react-native';
 import CustomerItem from './components/CustomerItem';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { Button } from '@rneui/themed';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Icon } from 'react-native-elements';
 
 import styled from 'styled-components';
 
 //data mockup
 import { CUSTOMERS_LIST } from '../../shared/data/customers';
-import { Icon } from 'react-native-elements';
-import { StackNavigationProp } from '@react-navigation/stack';
+
+//Models
 import { RootStackParams } from '../../models/route';
 
 //Redux
@@ -18,6 +20,10 @@ import {
     getListCustomer,
     resetListCustomer,
 } from '../../redux/actions/creators/customer';
+
+//Comnponents
+import { CustomerLoading } from './components/CustomerLoading';
+import { Customer } from '../../models/customer';
 
 const FillterWrapper = styled(View)`
     display: flex;
@@ -28,7 +34,9 @@ const FillterWrapper = styled(View)`
 
 export default function HomeScreen() {
     //Redux state
-    const { data } = useSelector((state: any) => state.customerList);
+    const { loading, data: customerList } = useSelector(
+        (state: any) => state.customerList,
+    );
 
     const { colors } = useTheme();
 
@@ -39,12 +47,11 @@ export default function HomeScreen() {
     React.useEffect(() => {
         dispatch(resetListCustomer());
         dispatch(getListCustomer());
-        if (data) {
-            console.log(data[0]?.name);
-        }
     }, []);
 
-    return (
+    return loading ? (
+        <CustomerLoading />
+    ) : (
         <React.Fragment>
             <FillterWrapper style={{ backgroundColor: colors.card }}>
                 <Button
@@ -76,7 +83,7 @@ export default function HomeScreen() {
                 </Button>
             </FillterWrapper>
             <ScrollView>
-                {CUSTOMERS_LIST?.map((customer) => (
+                {customerList?.map((customer: Customer) => (
                     <CustomerItem key={customer.id} customer={customer} />
                 ))}
             </ScrollView>

@@ -46,7 +46,15 @@ const Main = () => {
                     theme={scheme === 'dark' ? DarkTheme : DefaultTheme}
                 >
                     <MainScreen />
-                    <StatusBar />
+                    <StatusBar
+                        style={
+                            scheme === 'dark'
+                                ? 'light'
+                                : scheme === 'light'
+                                ? 'dark'
+                                : 'auto'
+                        }
+                    />
                 </NavigationContainer>
             </ThemeProvider>
         </PaperProvider>

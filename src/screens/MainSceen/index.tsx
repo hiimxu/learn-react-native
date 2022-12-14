@@ -11,6 +11,7 @@ import EditCustomer from '../HomeScreen/components/EditCustomer';
 import { RootStackParams } from '../../models/route';
 import AddCustomer from '../HomeScreen/components/AddCustomer';
 import SettingScreen from '../SettingScreen';
+import DarkmodeScreen from '../SettingScreen/screens/DarkmodeScreen';
 
 const Stack = createNativeStackNavigator<RootStackParams>();
 
@@ -44,6 +45,13 @@ export default function MainScreen() {
                         headerTitle: 'Setting & Privacy',
                     }}
                     component={SettingScreen}
+                />
+                <Stack.Screen
+                    name="Darkmode"
+                    options={{
+                        headerTitle: 'Dark mode',
+                    }}
+                    component={DarkmodeScreen}
                 />
             </Stack.Navigator>
         );

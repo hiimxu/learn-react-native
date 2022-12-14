@@ -3,4 +3,5 @@ export type RootStackParams = {
     EditCustomer: { userId: number; name?: string | undefined };
     AddCustomer: any;
     Setting: any;
+    Darkmode: any;
 };

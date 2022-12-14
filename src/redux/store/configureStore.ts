@@ -15,9 +15,14 @@ const loginConfig = {
     blacklist: ['errMess'],
 };
 
+const themeConfig = {
+    key: 'theme',
+    storage: AsyncStorage,
+    blacklist: ['errMess'],
+};
 const rootReducer = combineReducers({
     loginAccount: persistReducer(loginConfig, LoginAccount),
-    theme: Theme,
+    theme: persistReducer(themeConfig, Theme),
     customerList: CustomerList,
 });
 
