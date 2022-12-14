@@ -2,13 +2,20 @@ import React from 'react';
 import { ListItem, Icon } from 'react-native-elements';
 import { Button } from '@rneui/themed';
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { View } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import { VStack, Box } from '@react-native-material/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from '../../../../models/route';
 import ConfirmDialog from '../../../../components/ConfirmDialog';
 import SuccessDialog from '../../../../components/SuccessDialog';
 import { Customer } from '../../../../models/customer';
+
+const styles = StyleSheet.create({
+    tinyLogo: {
+        width: 50,
+        height: 50,
+    },
+});
 
 type Props = {
     customer?: Customer;
@@ -66,11 +73,11 @@ function CustomerItem({ customer }: Props) {
                 content={
                     <React.Fragment>
                         <View style={{ marginRight: 10 }}>
-                            <Icon
-                                name="person"
-                                size={30}
-                                tvParallaxProperties={undefined}
-                                color="#0d80d8"
+                            <Image
+                                style={styles.tinyLogo}
+                                source={{
+                                    uri: 'https://static.vncommerce.com/avatar/90C74E26FB-default.jpg',
+                                }}
                             />
                         </View>
                         <ListItem.Content>
@@ -108,6 +115,7 @@ function CustomerItem({ customer }: Props) {
                     <VStack spacing={10}>
                         <Box>
                             <Button
+                                buttonStyle={{ borderRadius: 10 }}
                                 onPress={() =>
                                     handleEdit(
                                         Number(customer?.id),
@@ -126,6 +134,7 @@ function CustomerItem({ customer }: Props) {
                         </Box>
                         <Box>
                             <Button
+                                buttonStyle={{ borderRadius: 10 }}
                                 color="error"
                                 onPress={() => setDeleteDialog(true)}
                             >

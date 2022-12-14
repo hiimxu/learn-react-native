@@ -32,9 +32,13 @@ export default function DarkmodeScreen() {
 
     const dispatch = useDispatch();
 
+    const handleChangeTheme = (theme?: 'dark' | 'light' | null | undefined) => {
+        dispatch(changeTheme(theme));
+    };
+
     return (
         <React.Fragment>
-            <ButtomWrapper onPress={() => dispatch(changeTheme('dark'))}>
+            <ButtomWrapper onPress={() => handleChangeTheme('dark')}>
                 <ItemContentWrapper>
                     <ButtonTitle style={{ color: colors.text }}>On</ButtonTitle>
                 </ItemContentWrapper>
@@ -42,10 +46,10 @@ export default function DarkmodeScreen() {
                     value="dark"
                     status={theme === 'dark' ? 'checked' : 'unchecked'}
                     color={colors.text}
-                    onPress={() => dispatch(changeTheme('dark'))}
+                    onPress={() => handleChangeTheme('dark')}
                 />
             </ButtomWrapper>
-            <ButtomWrapper onPress={() => dispatch(changeTheme('light'))}>
+            <ButtomWrapper onPress={() => handleChangeTheme('light')}>
                 <ItemContentWrapper>
                     <ButtonTitle style={{ color: colors.text }}>
                         Off
@@ -55,10 +59,10 @@ export default function DarkmodeScreen() {
                     value="light"
                     status={theme === 'light' ? 'checked' : 'unchecked'}
                     color={colors.text}
-                    onPress={() => dispatch(changeTheme('light'))}
+                    onPress={() => handleChangeTheme('light')}
                 />
             </ButtomWrapper>
-            <ButtomWrapper onPress={() => dispatch(changeTheme())}>
+            <ButtomWrapper onPress={() => handleChangeTheme()}>
                 <ItemContentWrapper>
                     <ButtonTitle style={{ color: colors.text }}>
                         Use system settings
@@ -72,7 +76,7 @@ export default function DarkmodeScreen() {
                     value="device"
                     status={!theme ? 'checked' : 'unchecked'}
                     color={colors.text}
-                    onPress={() => dispatch(changeTheme())}
+                    onPress={() => handleChangeTheme()}
                 />
             </ButtomWrapper>
         </React.Fragment>

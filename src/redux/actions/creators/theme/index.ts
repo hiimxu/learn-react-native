@@ -3,7 +3,6 @@ import * as ThemActionsType from '../../types/theme';
 export const changeTheme =
     (themeDetail?: 'dark' | 'light' | null | undefined) => (dispatch: any) => {
         const theme = themeDetail;
-        console.log(theme);
 
         if (theme === 'dark') {
             dispatch(setThemeDark(theme));

@@ -8,9 +8,6 @@ import { Icon } from 'react-native-elements';
 
 import styled from 'styled-components';
 
-//data mockup
-import { CUSTOMERS_LIST } from '../../shared/data/customers';
-
 //Models
 import { RootStackParams } from '../../models/route';
 
@@ -59,7 +56,7 @@ export default function HomeScreen() {
                     buttonStyle={{
                         borderColor: colors.text,
                         borderWidth: 2,
-                        borderRadius: 5,
+                        borderRadius: 10,
                     }}
                 >
                     <Icon
@@ -71,7 +68,7 @@ export default function HomeScreen() {
                 <Button
                     color={colors.primary}
                     buttonStyle={{
-                        borderRadius: 5,
+                        borderRadius: 10,
                     }}
                     onPress={() => navigate('AddCustomer')}
                 >
