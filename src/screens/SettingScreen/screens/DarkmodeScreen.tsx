@@ -42,6 +42,7 @@ export default function DarkmodeScreen() {
                     value="dark"
                     status={theme === 'dark' ? 'checked' : 'unchecked'}
                     color={colors.text}
+                    onPress={() => dispatch(changeTheme('dark'))}
                 />
             </ButtomWrapper>
             <ButtomWrapper onPress={() => dispatch(changeTheme('light'))}>
@@ -50,11 +51,11 @@ export default function DarkmodeScreen() {
                         Off
                     </ButtonTitle>
                 </ItemContentWrapper>
-
                 <RadioButton
                     value="light"
                     status={theme === 'light' ? 'checked' : 'unchecked'}
                     color={colors.text}
+                    onPress={() => dispatch(changeTheme('light'))}
                 />
             </ButtomWrapper>
             <ButtomWrapper onPress={() => dispatch(changeTheme())}>
@@ -71,6 +72,7 @@ export default function DarkmodeScreen() {
                     value="device"
                     status={!theme ? 'checked' : 'unchecked'}
                     color={colors.text}
+                    onPress={() => dispatch(changeTheme())}
                 />
             </ButtomWrapper>
         </React.Fragment>
