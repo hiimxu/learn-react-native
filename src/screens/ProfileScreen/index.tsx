@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import { HStack, Box } from '@react-native-material/core';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation, useTheme } from '@react-navigation/native';
 
 //Styles
-import { useNavigation, useTheme } from '@react-navigation/native';
 import styled from 'styled-components';
 
 //Redux
@@ -12,9 +13,7 @@ import { logout } from '../../redux/actions/creators/auth';
 
 //Components
 import ButtonCustom from '../../components/ButtonCustom';
-import CardWrapper from '../../components/CardWrapper';
 import MenuButton from './components/MenuButton';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from '../../models/route';
 
 const ButtonWrapper = styled(HStack)`

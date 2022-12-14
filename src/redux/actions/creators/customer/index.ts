@@ -1,6 +1,7 @@
 import * as CustomerActionsType from '../../types/customer';
 import { getCustomerList } from '../../../../Services/customerService';
 
+//Get list customer
 export const getListCustomer = () => (dispatch: any) => {
     dispatch(pendingGetListCustomer());
     const fetchApi = async () => {

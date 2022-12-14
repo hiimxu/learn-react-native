@@ -55,6 +55,7 @@ function CustomerItem({ customer }: Props) {
     return (
         <React.Fragment>
             <React.Fragment>
+                {/* Dialog */}
                 <ConfirmDialog
                     isVisible={deleteDialog}
                     icon="delete"

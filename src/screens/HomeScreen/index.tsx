@@ -36,9 +36,7 @@ export default function HomeScreen() {
     );
 
     const { colors } = useTheme();
-
     const { navigate } = useNavigation<StackNavigationProp<RootStackParams>>();
-
     const dispatch = useDispatch();
 
     React.useEffect(() => {

@@ -31,7 +31,6 @@ const Main = () => {
     const colorTheme: ColorSchemeName = useColorScheme();
 
     React.useEffect(() => {
-        console.log(theme);
         if (theme) {
             setScheme(theme);
         } else if (theme === null) {
