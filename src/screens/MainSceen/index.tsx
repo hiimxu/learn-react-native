@@ -5,11 +5,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Components
 import Navbar from '../../components/Navbar';
 import LoginScreen from '../LoginScreen';
-import EditCustomer from '../HomeScreen/components/EditCustomer';
+import EditCustomer from '../HomeScreen/screens/EditCustomer';
 
 //Type
 import { RootStackParams } from '../../models/route';
-import AddCustomer from '../HomeScreen/components/AddCustomer';
+import AddCustomer from '../HomeScreen/screens/AddCustomer';
 import SettingScreen from '../SettingScreen';
 import DarkmodeScreen from '../SettingScreen/screens/DarkmodeScreen';
 

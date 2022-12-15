@@ -7,6 +7,7 @@ import styled from 'styled-components';
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/actions/creators/auth';
+import { authSelector } from '../../redux/selectors/authSelector';
 
 //IMAGE
 
@@ -41,7 +42,7 @@ export default function LoginScreen() {
     const { colors } = useTheme();
 
     //Redux
-    const { errMess } = useSelector((state: any) => state.loginAccount);
+    const { errMess } = useSelector(authSelector);
     const dispatch = useDispatch();
 
     const handleSubmit = () => {

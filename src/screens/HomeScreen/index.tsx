@@ -21,6 +21,8 @@ import {
 //Comnponents
 import { CustomerLoading } from './components/CustomerLoading';
 import { Customer } from '../../models/customer';
+import { listCustomerSelector } from '../../redux/selectors/customerSelector';
+import { authSelector } from '../../redux/selectors/authSelector';
 
 const FillterWrapper = styled(View)`
     display: flex;
@@ -31,9 +33,8 @@ const FillterWrapper = styled(View)`
 
 export default function HomeScreen() {
     //Redux state
-    const { loading, data: customerList } = useSelector(
-        (state: any) => state.customerList,
-    );
+    const { loading, data: customerList } = useSelector(listCustomerSelector);
+    const { account } = useSelector(authSelector);
 
     const { colors } = useTheme();
     const { navigate } = useNavigation<StackNavigationProp<RootStackParams>>();
@@ -41,7 +42,7 @@ export default function HomeScreen() {
 
     React.useEffect(() => {
         dispatch(resetListCustomer());
-        dispatch(getListCustomer());
+        dispatch(getListCustomer(account.id_token));
     }, []);
 
     return loading ? (

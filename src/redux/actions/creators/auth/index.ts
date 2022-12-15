@@ -1,25 +1,35 @@
 import * as AuthActionTypes from '../../types/auth';
+import * as authService from '../../../../Services/authService';
 
 type LoginDetails = {
     username: string;
     password: string;
 };
 
-const ACCOUNT_DETAIL = {
-    username_data: 'admin',
-    password_data: 'admin',
-};
-
 export const login = (loginDetails: LoginDetails) => (dispatch: any) => {
     const { username, password } = loginDetails;
-    if (
-        username === ACCOUNT_DETAIL.username_data &&
-        password === ACCOUNT_DETAIL.password_data
-    ) {
-        dispatch(loginSuccessfully(username));
-    } else {
-        dispatch(loginFailed('Login failed!'));
-    }
+
+    const submitObj = {
+        username: username,
+        password: password,
+    };
+
+    dispatch(loginPending());
+    const fetchApi = async () => {
+        const result = await authService.authenticate(submitObj);
+        if (result?.status === 200) {
+            dispatch(loginSuccessfully(result?.data));
+        } else {
+            dispatch(loginFailed('Wrong username or password. Try again!'));
+        }
+    };
+    fetchApi();
+};
+
+const loginPending = () => {
+    return {
+        type: AuthActionTypes.LOGIN_PENDING,
+    };
 };
 
 const loginSuccessfully = (account: string) => {
