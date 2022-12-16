@@ -119,3 +119,31 @@ export const AddCustomer = (
             return state;
     }
 };
+
+export const DeleteCustomer = (
+    state = { loading: false, data: null, errMess: null },
+    action: ActionType,
+) => {
+    switch (action.type) {
+        case CustomerActionsType.PENDING_DELETE_CUSTOMER:
+            return { ...state, loading: true, data: null, errMess: null };
+        case CustomerActionsType.DELETE_CUSTOMER_SUCCESSFULLY:
+            return {
+                ...state,
+                loading: false,
+                data: action.payload,
+                errMess: null,
+            };
+        case CustomerActionsType.DELETE_CUSTOMER_FAILED:
+            return {
+                ...state,
+                loading: false,
+                data: null,
+                errMess: action.payload,
+            };
+        case CustomerActionsType.RESET_DELETE_CUSTOMER_MESSAGE:
+            return { ...state, loading: false, data: null, errMess: null };
+        default:
+            return state;
+    }
+};

@@ -9,6 +9,12 @@ import { RootStackParams } from '../../../../models/route';
 import ConfirmDialog from '../../../../components/ConfirmDialog';
 import SuccessDialog from '../../../../components/SuccessDialog';
 import { Customer } from '../../../../models/customer';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    deleteCustomer,
+    getListCustomer,
+} from '../../../../redux/actions/creators/customer';
+import { authSelector } from '../../../../redux/selectors/authSelector';
 
 const styles = StyleSheet.create({
     tinyLogo: {
@@ -29,6 +35,12 @@ function CustomerItem({ customer }: Props) {
     const [deleteDialog, setDeleteDialog] = React.useState<boolean>(false);
     const [successDialog, setSuccessDialog] = React.useState<boolean>(false);
 
+    //Redux state
+    const { account } = useSelector(authSelector);
+
+    //Redux hooks
+    const dispatch = useDispatch();
+
     //Hooks
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
 
@@ -44,10 +56,16 @@ function CustomerItem({ customer }: Props) {
 
     //Handle dialog
     const handleConfirmDelete = () => {
-        setSuccessDialog(true);
+        const successCallback = () => {
+            setSuccessDialog(true);
+        };
+        dispatch(
+            deleteCustomer(customer?.id, successCallback, account.id_token),
+        );
     };
 
     const handleCloseSuccessDialog = () => {
+        dispatch(getListCustomer(account.id_token));
         setSuccessDialog(false);
         setDeleteDialog(false);
     };
@@ -59,7 +77,7 @@ function CustomerItem({ customer }: Props) {
                     isVisible={deleteDialog}
                     icon="delete"
                     title="Delete customer"
-                    content="Do you want delete this customer?"
+                    content={`Do you want delete customer ${customer?.name}?`}
                     onClose={() => setDeleteDialog(false)}
                     onConfirm={handleConfirmDelete}
                 />
@@ -76,7 +94,7 @@ function CustomerItem({ customer }: Props) {
                             <Image
                                 style={styles.tinyLogo}
                                 source={{
-                                    uri: 'https://static.vncommerce.com/avatar/90C74E26FB-default.jpg',
+                                    uri: customer?.image,
                                 }}
                             />
                         </View>

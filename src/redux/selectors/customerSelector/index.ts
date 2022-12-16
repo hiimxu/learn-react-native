@@ -6,3 +6,5 @@ export const customerInfomationSelector = (state: any) =>
 export const editCustomerSelector = (state: any) => state.editCustomer;
 
 export const addCustomerSelector = (state: any) => state.addCustomer;
+
+export const deleteCustomerSelector = (state: any) => state.deleteCustomer;

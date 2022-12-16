@@ -287,3 +287,52 @@ export const resetAddCustomerMess = () => {
         payload: null,
     };
 };
+
+//Delete customer
+export const deleteCustomer =
+    (id: number | undefined, callback: () => void, token: string) =>
+    (dispatch: Dispatch) => {
+        const authToken = `Bearer ${token}`;
+        dispatch(pendingDeleteCustomer());
+        const fetchApi = async () => {
+            const response = await customerService.deleteCustomerInfomation(
+                id,
+                authToken,
+            );
+            if (response?.status === 204) {
+                dispatch(deleteCustomerSuccessfully(response?.data));
+                callback();
+            } else {
+                dispatch(deleteCustomerFailed(response?.data));
+            }
+        };
+        fetchApi();
+    };
+
+const pendingDeleteCustomer = () => {
+    return {
+        type: CustomerActionsType.PENDING_DELETE_CUSTOMER,
+        payload: null,
+    };
+};
+
+const deleteCustomerSuccessfully = (data: any) => {
+    return {
+        type: CustomerActionsType.DELETE_CUSTOMER_SUCCESSFULLY,
+        payload: data,
+    };
+};
+
+const deleteCustomerFailed = (errMess: any) => {
+    return {
+        type: CustomerActionsType.DELETE_CUSTOMER_FAILED,
+        payload: errMess,
+    };
+};
+
+export const resetDeleteCustomerMess = () => {
+    return {
+        type: CustomerActionsType.RESET_DELETE_CUSTOMER_MESSAGE,
+        payload: null,
+    };
+};

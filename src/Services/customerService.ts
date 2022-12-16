@@ -95,3 +95,21 @@ export const addCustomerInfomation = async ({
         return err.response;
     }
 };
+
+export const deleteCustomerInfomation = async (
+    id: number | undefined,
+    token: string,
+) => {
+    try {
+        const response = await request.del(`customers/${id}`, {
+            headers: {
+                Authorization: token,
+            },
+        });
+        return response;
+    } catch (error) {
+        const err = error as AxiosError;
+        console.log(err.response);
+        return err.response;
+    }
+};

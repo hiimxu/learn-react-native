@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 
 const request = axios.create({
     baseURL: 'http://103.147.35.60:8081/api/',
@@ -25,8 +24,8 @@ export const update = async (path: any, req?: any, headers?: any) => {
     return response;
 };
 
-export const del = async (path: any) => {
-    const response = await request.delete(path);
+export const del = async (path: any, headers?: any) => {
+    const response = await request.delete(path, headers);
     return response;
 };
 
