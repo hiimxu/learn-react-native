@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Image, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import {
     RouteProp,
@@ -29,8 +29,16 @@ import { authSelector } from '../../../../redux/selectors/authSelector';
 import { RootStackParams } from '../../../../models/route';
 import { Customer } from '../../../../models/customer';
 
+import * as ImagePicker from 'expo-image-picker';
+
 const Wrapper = styled(View)`
     padding: 20px 10px;
+`;
+
+const ImageWrapper = styled(View)`
+    padding: 15px 0;
+    display: flex;
+    flex-direction: row;
 `;
 
 const TextCustomerInfo = styled(Text)`
@@ -38,6 +46,13 @@ const TextCustomerInfo = styled(Text)`
     font-weight: 500;
     text-align: center;
 `;
+
+const styles = StyleSheet.create({
+    tinyLogo: {
+        width: 150,
+        height: 200,
+    },
+});
 
 type ParamList = {
     EditCustomer: {
@@ -48,7 +63,8 @@ type ParamList = {
 
 export default function EditCustomer() {
     //State
-    const [filePath, setFilePath] = React.useState<any>({});
+    const [status, setStatus] = React.useState<boolean>(false);
+    const [image, setImage] = React.useState<string | undefined>(undefined);
 
     //Redux state
     const { account } = useSelector(authSelector);
@@ -75,6 +91,7 @@ export default function EditCustomer() {
     //Set default value
     React.useEffect(() => {
         reset(data);
+        setImage(data?.image);
     }, [data]);
 
     //Form data
@@ -100,7 +117,13 @@ export default function EditCustomer() {
             setSuccessDialog(true);
         };
         dispatch(
-            editCustomerInfomation(data, successCallback, account.id_token),
+            editCustomerInfomation({
+                status: status,
+                data: data,
+                image: image,
+                callback: successCallback,
+                token: account.id_token,
+            }),
         );
     };
 
@@ -109,6 +132,37 @@ export default function EditCustomer() {
         dispatch(getListCustomer(account.id_token));
         setSuccessDialog(false);
         navigate('Home');
+    };
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [3, 4],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setStatus(true);
+            const file = result?.assets[0]?.uri;
+            setImage(file);
+        }
+    };
+    const takePicture = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [3, 4],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setStatus(true);
+            const file = result?.assets[0]?.uri;
+            setImage(file);
+        }
     };
 
     return (
@@ -133,6 +187,26 @@ export default function EditCustomer() {
             ) : (
                 <ScrollView>
                     <Wrapper>
+                        <ImageWrapper>
+                            {image && (
+                                <Image
+                                    style={styles.tinyLogo}
+                                    source={{
+                                        uri: image,
+                                    }}
+                                />
+                            )}
+                            <Button
+                                type="clear"
+                                title={'Choose photo'}
+                                onPress={pickImage}
+                            />
+                            <Button
+                                type="clear"
+                                title={'Take photo'}
+                                onPress={takePicture}
+                            />
+                        </ImageWrapper>
                         <Controller
                             control={control}
                             rules={{
@@ -228,6 +302,8 @@ export default function EditCustomer() {
                             control={control}
                             rules={{
                                 required: true,
+                                pattern:
+                                    /^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z].{1,40}$/i,
                             }}
                             render={({
                                 field: { onChange, onBlur, value },
@@ -236,13 +312,18 @@ export default function EditCustomer() {
                                     ref={addressRef}
                                     style={{ color: colors.text }}
                                     onBlur={onBlur}
+                                    keyboardType="email-address"
                                     label="Email"
                                     value={value}
                                     onChangeText={onChange}
                                     autoCompleteType={undefined}
                                     errorStyle={{ color: 'red' }}
                                     errorMessage={
-                                        errors.email ? 'Email is required!' : ''
+                                        errors.email?.type === 'required'
+                                            ? 'Email is required!'
+                                            : errors.email?.type === 'pattern'
+                                            ? 'Email wrong format. Try again!'
+                                            : ''
                                     }
                                     onSubmitEditing={handleSubmit(onSubmit)}
                                 />
