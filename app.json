@@ -1,41 +1,51 @@
 {
-  "expo": {
-    "name": "learn-react-native",
-    "slug": "learn-react-native",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "userInterfaceStyle": "automatic",
-      "package": "com.hiimxu.learnreactnative"
-    },
-    "web": {
-      "favicon": "./assets/images/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "f9a21698-9397-4dac-9a6c-624daa3ce45d"
-      }
+    "expo": {
+        "name": "learn-react-native",
+        "slug": "learn-react-native",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/images/icon.png",
+        "scheme": "myapp",
+        "userInterfaceStyle": "automatic",
+        "splash": {
+            "image": "./assets/images/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": ["**/*"],
+        "ios": {
+            "supportsTablet": true
+        },
+        "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/images/adaptive-icon.png",
+                "backgroundColor": "#ffffff"
+            },
+            "userInterfaceStyle": "automatic",
+            "package": "com.hiimxu.learnreactnative"
+        },
+        "web": {
+            "favicon": "./assets/images/favicon.png"
+        },
+        "extra": {
+            "eas": {
+                "projectId": "f9a21698-9397-4dac-9a6c-624daa3ce45d"
+            }
+        },
+        "plugins": [
+            [
+                "expo-image-picker",
+                {
+                    "photosPermission": "custom photos permission",
+                    "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
+
+                    "//": "Disables the microphone permission",
+                    "microphonePermission": false
+                }
+            ]
+        ]
     }
-  }
 }

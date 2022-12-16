@@ -1,8 +1,11 @@
+import { Callback } from './../../../../screens/HomeScreen/screens/imagePickerTypes/index';
 import * as CustomerActionsType from '../../types/customer';
 import * as customerService from '../../../../Services/customerService';
+import * as imageService from '../../../../Services/imageService';
+import { Dispatch } from 'redux';
 
 //Get list customer
-export const getListCustomer = (token: string) => (dispatch: any) => {
+export const getListCustomer = (token: string) => (dispatch: Dispatch) => {
     const authToken = `Bearer ${token}`;
     dispatch(pendingGetListCustomer());
     const fetchApi = async () => {
@@ -46,7 +49,7 @@ export const resetListCustomer = () => {
 
 //Get customer infomation
 export const getCustomerInfomation =
-    (customerId: number, token: string) => (dispatch: any) => {
+    (customerId: number, token: string) => (dispatch: Dispatch) => {
         const authToken = `Bearer ${token}`;
         dispatch(pendingGetCustomerInfomation());
         const fetchApi = async () => {
@@ -97,19 +100,61 @@ export const resetCustomerInfomation = () => {
 
 //Edit customer infomation
 export const editCustomerInfomation =
-    (data: any, callback: () => void, token: string) => (dispatch: any) => {
+    ({
+        status,
+        data,
+        image,
+        callback,
+        token,
+    }: {
+        status: boolean;
+        data: any;
+        image: string | undefined;
+        callback: () => void;
+        token: string;
+    }) =>
+    (dispatch: any) => {
         const authToken = `Bearer ${token}`;
         dispatch(pendingEditCustomerInfomation());
         const fetchApi = async () => {
-            const response = await customerService.editCstomerInfomation(
-                data,
-                authToken,
-            );
-            if (response?.status === 200) {
-                dispatch(editCustomerInfomationSuccessfully(response.data));
-                callback();
+            if (status && image) {
+                const imageInfo = await imageService.uploadImage(
+                    image,
+                    authToken,
+                );
+                if (imageInfo?.status === 200) {
+                    const responseData = imageInfo?.body;
+                    const arrayfile = JSON.parse(responseData);
+
+                    const response =
+                        await customerService.editCstomerInfomation({
+                            data: data,
+                            image: arrayfile[0]?.url,
+                            token: authToken,
+                        });
+                    if (response?.status === 200) {
+                        dispatch(
+                            editCustomerInfomationSuccessfully(response.data),
+                        );
+                        callback();
+                    } else {
+                        dispatch(editCustomerInfomationFailed(response?.data));
+                    }
+                } else {
+                    console.log(imageInfo);
+                }
             } else {
-                dispatch(editCustomerInfomationFailed(response?.data));
+                const response = await customerService.editCstomerInfomation({
+                    data: data,
+                    image: data?.image,
+                    token: authToken,
+                });
+                if (response?.status === 200) {
+                    dispatch(editCustomerInfomationSuccessfully(response.data));
+                    callback();
+                } else {
+                    dispatch(editCustomerInfomationFailed(response?.data));
+                }
             }
         };
         fetchApi();
@@ -136,6 +181,109 @@ const editCustomerInfomationFailed = (errMess: any) => {
 export const resetEditCustomerMessage = () => {
     return {
         type: CustomerActionsType.RESET_EDIT_CUSTOMER_MESSAGE,
+        payload: null,
+    };
+};
+
+//Add customer infomation
+export const addCustomerInfomation =
+    ({
+        data,
+        callback,
+        token,
+    }: {
+        data: any;
+        callback: () => void;
+        token: string;
+    }) =>
+    (dispatch: Dispatch) => {
+        const authToken = `Bearer ${token}`;
+        dispatch(pendingAddCustomerInfomation());
+        const fetchApi = async () => {
+            if (data.image) {
+                const imageInfo = await imageService.uploadImage(
+                    data.image,
+                    authToken,
+                );
+                if (imageInfo?.status === 200) {
+                    const responseData = imageInfo?.body;
+                    const arrayfile = JSON.parse(responseData);
+                    const submitObj = {
+                        name: data.name,
+                        code: data.code,
+                        image: arrayfile[0]?.url,
+                        address: data.address,
+                        phone: data.phone,
+                        email: data.email,
+                        createdBy: 'admin',
+                    };
+
+                    const response =
+                        await customerService.addCustomerInfomation({
+                            data: submitObj,
+                            token: authToken,
+                        });
+                    if (response?.status === 200) {
+                        dispatch(
+                            addCustomerInfomationSuccessfully(response.data),
+                        );
+                        callback();
+                    } else {
+                        dispatch(addCustomerInfomationFailed(response?.data));
+                    }
+                } else {
+                    console.log(imageInfo);
+                }
+            } else {
+                const submitObj = {
+                    name: data.name,
+                    code: data.code,
+                    image: 'https://static.vncommerce.com/avatar/90C74E26FB-default.jpg',
+                    address: data.address,
+                    phone: data.phone,
+                    email: data.email,
+                    createdBy: 'admin',
+                };
+
+                const response = await customerService.addCustomerInfomation({
+                    data: submitObj,
+                    token: authToken,
+                });
+                if (response?.status === 200) {
+                    dispatch(addCustomerInfomationSuccessfully(response.data));
+                    callback();
+                } else {
+                    dispatch(addCustomerInfomationFailed(response?.data));
+                }
+            }
+        };
+        fetchApi();
+    };
+
+const pendingAddCustomerInfomation = () => {
+    return {
+        type: CustomerActionsType.PENDING_EDIT_CUSTOMER,
+        payload: null,
+    };
+};
+
+const addCustomerInfomationSuccessfully = (data: any) => {
+    return {
+        type: CustomerActionsType.ADD_CUSTOMER_SUCCESSFULLY,
+        payload: data,
+    };
+};
+
+const addCustomerInfomationFailed = (errMess: any) => {
+    return {
+        type: CustomerActionsType.ADD_CUSTOMER_FAILED,
+        payload: errMess,
+    };
+};
+
+export const resetAddCustomerMess = () => {
+    return {
+        type: CustomerActionsType.RESET_ADD_CUSTOMER_MESSAGE,
         payload: null,
     };
 };

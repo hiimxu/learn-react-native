@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, StyleSheet, Image } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { TextInput } from 'react-native-gesture-handler';
 import { useForm, Controller } from 'react-hook-form';
@@ -10,19 +10,47 @@ import SuccessDialog from '../../../../components/SuccessDialog';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from '../../../../models/route';
 
+import * as ImagePicker from 'expo-image-picker';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    addCustomerInfomation,
+    getListCustomer,
+    resetAddCustomerMess,
+} from '../../../../redux/actions/creators/customer';
+import { authSelector } from '../../../../redux/selectors/authSelector';
+
 const InputWrapper = styled(View)`
     padding: 20px 10px;
 `;
 
+const ImageWrapper = styled(View)`
+    padding: 15px 0;
+    display: flex;
+    flex-direction: row;
+`;
+
 type FormData = {
-    firstName: string;
-    lastName: string;
-    phone: string;
+    name: string;
+    code: string;
     address: string;
+    phoneNumber: string;
+    email: string;
 };
 
+const styles = StyleSheet.create({
+    tinyLogo: {
+        width: 150,
+        height: 200,
+    },
+});
+
 export default function AddCustomer() {
+    //State
     const [successDialog, setSuccessDialog] = React.useState<boolean>(false);
+    const [image, setImage] = React.useState<string | undefined | null>(null);
+
+    //Redux state
+    const { account } = useSelector(authSelector);
 
     //Form data
     const {
@@ -30,6 +58,9 @@ export default function AddCustomer() {
         handleSubmit,
         formState: { errors },
     } = useForm<FormData>();
+
+    //Redux hooks
+    const dispatch = useDispatch();
 
     //Theme
     const { colors } = useTheme();
@@ -44,14 +75,64 @@ export default function AddCustomer() {
 
     //Submit
     const onSubmit = (data: FormData) => {
-        console.log(data);
-        setSuccessDialog(true);
+        const { name, code, address, phoneNumber, email } = data;
+        const submitObj = {
+            name: name,
+            code: code,
+            image: image,
+            address: address,
+            phone: phoneNumber,
+            email: email,
+        };
+
+        const successCallback = () => {
+            dispatch(resetAddCustomerMess());
+            setSuccessDialog(true);
+        };
+
+        dispatch(
+            addCustomerInfomation({
+                data: submitObj,
+                callback: successCallback,
+                token: account.id_token,
+            }),
+        );
     };
 
     //Handle Success dialog
     const handleCloseSuccessDialog = () => {
+        dispatch(getListCustomer(account.id_token));
         setSuccessDialog(false);
         navigate('Home');
+    };
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [3, 4],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const file = result?.assets[0]?.uri;
+            setImage(file);
+        }
+    };
+    const takePicture = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [3, 4],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const file = result?.assets[0]?.uri;
+            setImage(file);
+        }
     };
 
     return (
@@ -63,6 +144,27 @@ export default function AddCustomer() {
             />
             <ScrollView>
                 <InputWrapper>
+                    <ImageWrapper>
+                        <Image
+                            style={styles.tinyLogo}
+                            source={{
+                                uri: image
+                                    ? image
+                                    : 'https://static.vncommerce.com/avatar/90C74E26FB-default.jpg',
+                            }}
+                        />
+
+                        <Button
+                            type="clear"
+                            title={'Choose photo'}
+                            onPress={pickImage}
+                        />
+                        <Button
+                            type="clear"
+                            title={'Take photo'}
+                            onPress={takePicture}
+                        />
+                    </ImageWrapper>
                     <Controller
                         control={control}
                         rules={{
@@ -73,24 +175,21 @@ export default function AddCustomer() {
                                 style={{ color: colors.text }}
                                 returnKeyType="next"
                                 onBlur={onBlur}
-                                label="First name"
+                                label="Name"
                                 value={value}
                                 onChangeText={onChange}
                                 autoCompleteType={undefined}
                                 errorStyle={{ color: 'red' }}
                                 errorMessage={
-                                    errors.firstName
-                                        ? 'First name is required!'
-                                        : ''
+                                    errors.name ? 'Name is required!' : ''
                                 }
                                 onSubmitEditing={() =>
                                     lNameRef.current?.focus()
                                 }
                             />
                         )}
-                        name="firstName"
+                        name="name"
                     />
-
                     <Controller
                         control={control}
                         rules={{
@@ -102,22 +201,20 @@ export default function AddCustomer() {
                                 style={{ color: colors.text }}
                                 returnKeyType="next"
                                 onBlur={onBlur}
-                                label="Last name"
+                                label="Code"
                                 value={value}
                                 onChangeText={onChange}
                                 autoCompleteType={undefined}
                                 errorStyle={{ color: 'red' }}
                                 errorMessage={
-                                    errors.lastName
-                                        ? 'Last name is required!'
-                                        : ''
+                                    errors.code ? 'Code is required!' : ''
                                 }
                                 onSubmitEditing={() =>
                                     pNumberRef.current?.focus()
                                 }
                             />
                         )}
-                        name="lastName"
+                        name="code"
                     />
                     <Controller
                         control={control}
@@ -139,9 +236,9 @@ export default function AddCustomer() {
                                 autoCompleteType={undefined}
                                 errorStyle={{ color: 'red' }}
                                 errorMessage={
-                                    errors.phone?.type === 'required'
+                                    errors.phoneNumber?.type === 'required'
                                         ? 'Phone is required!'
-                                        : errors.phone?.type === 'pattern'
+                                        : errors.phoneNumber?.type === 'pattern'
                                         ? 'Phome number wrong format. Try again!'
                                         : ''
                                 }
@@ -150,7 +247,37 @@ export default function AddCustomer() {
                                 }
                             />
                         )}
-                        name="phone"
+                        name="phoneNumber"
+                    />
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                            pattern:
+                                /^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z].{1,40}$/i,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <Input
+                                ref={addressRef}
+                                style={{ color: colors.text }}
+                                onBlur={onBlur}
+                                keyboardType="email-address"
+                                label="Email"
+                                value={value}
+                                onChangeText={onChange}
+                                autoCompleteType={undefined}
+                                errorStyle={{ color: 'red' }}
+                                errorMessage={
+                                    errors.email?.type === 'required'
+                                        ? 'Email is required!'
+                                        : errors.email?.type === 'pattern'
+                                        ? 'Email wrong format. Try again!'
+                                        : ''
+                                }
+                                onSubmitEditing={handleSubmit(onSubmit)}
+                            />
+                        )}
+                        name="email"
                     />
                     <Controller
                         control={control}

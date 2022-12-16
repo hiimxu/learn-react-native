@@ -11,6 +11,7 @@ import {
     CustomerInfomation,
     CustomerList,
     EditCustomer,
+    AddCustomer,
 } from '../reducers/customer';
 
 const loginConfig = {
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
     customerList: CustomerList,
     customerInfomation: CustomerInfomation,
     editCustomer: EditCustomer,
+    addCustomer: AddCustomer,
 });
 
 export const ConfigureStore = () => {

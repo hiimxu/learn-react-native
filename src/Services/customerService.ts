@@ -31,8 +31,16 @@ export const getCustomerInfomation = async (id: number, token: string) => {
     }
 };
 
-export const editCstomerInfomation = async (data: any, token: string) => {
-    const { id, name, code, image, address, phoneNumber, email } = data;
+export const editCstomerInfomation = async ({
+    data,
+    image,
+    token,
+}: {
+    data: any;
+    image: any;
+    token: string;
+}) => {
+    const { id, name, code, address, phoneNumber, email } = data;
     const submitObj = {
         id: id,
         name: name,
@@ -45,6 +53,37 @@ export const editCstomerInfomation = async (data: any, token: string) => {
 
     try {
         const response = await request.put(`customers/${id}`, submitObj, {
+            headers: {
+                Authorization: token,
+            },
+        });
+        return response;
+    } catch (error) {
+        const err = error as AxiosError;
+        console.log(err.response);
+        return err.response;
+    }
+};
+
+export const addCustomerInfomation = async ({
+    data,
+    token,
+}: {
+    data: any;
+    token: string;
+}) => {
+    const { name, code, image, address, phone, email, createdBy } = data;
+    const submitObj = {
+        name: name,
+        code: code,
+        image: image,
+        address: address,
+        phoneNumber: phone,
+        email: email,
+        createdBy: createdBy,
+    };
+    try {
+        const response = await request.post(`customers`, submitObj, {
             headers: {
                 Authorization: token,
             },

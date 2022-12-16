@@ -91,3 +91,31 @@ export const EditCustomer = (
             return state;
     }
 };
+
+export const AddCustomer = (
+    state = { loading: false, data: null, errMess: null },
+    action: ActionType,
+) => {
+    switch (action.type) {
+        case CustomerActionsType.PENDING_ADD_CUSTOMER:
+            return { ...state, loading: true, data: null, errMess: null };
+        case CustomerActionsType.ADD_CUSTOMER_SUCCESSFULLY:
+            return {
+                ...state,
+                loading: false,
+                data: action.payload,
+                errMess: null,
+            };
+        case CustomerActionsType.ADD_CUSTOMER_FAILED:
+            return {
+                ...state,
+                loading: false,
+                data: false,
+                errMess: action.payload,
+            };
+        case CustomerActionsType.RESET_ADD_CUSTOMER_MESSAGE:
+            return { ...state, loading: false, data: null, errMess: null };
+        default:
+            return state;
+    }
+};
