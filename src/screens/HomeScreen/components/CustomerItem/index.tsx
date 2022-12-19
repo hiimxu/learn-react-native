@@ -16,6 +16,7 @@ import {
 } from '../../../../redux/actions/creators/customer';
 import { authSelector } from '../../../../redux/selectors/authSelector';
 import { deleteCustomerSelector } from '../../../../redux/selectors/customerSelector';
+import Avatar from '../../../../components/Avatar';
 
 const styles = StyleSheet.create({
     tinyLogo: {
@@ -95,12 +96,7 @@ function CustomerItem({ customer }: Props) {
                 content={
                     <React.Fragment>
                         <View style={{ marginRight: 10 }}>
-                            <Image
-                                style={styles.tinyLogo}
-                                source={{
-                                    uri: customer?.image,
-                                }}
-                            />
+                            <Avatar uri={customer?.image} circle />
                         </View>
                         <ListItem.Content>
                             <ListItem.Title>{customer?.name}</ListItem.Title>
