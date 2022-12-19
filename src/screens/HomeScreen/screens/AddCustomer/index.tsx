@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, Image } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { Button, Input, LinearProgress } from 'react-native-elements';
 import { TextInput } from 'react-native-gesture-handler';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation, useTheme } from '@react-navigation/native';
@@ -18,6 +18,7 @@ import {
     resetAddCustomerMess,
 } from '../../../../redux/actions/creators/customer';
 import { authSelector } from '../../../../redux/selectors/authSelector';
+import { addCustomerSelector } from '../../../../redux/selectors/customerSelector';
 
 const InputWrapper = styled(View)`
     padding: 20px 10px;
@@ -51,6 +52,7 @@ export default function AddCustomer() {
 
     //Redux state
     const { account } = useSelector(authSelector);
+    const { loading } = useSelector(addCustomerSelector);
 
     //Form data
     const {
@@ -90,13 +92,15 @@ export default function AddCustomer() {
             setSuccessDialog(true);
         };
 
-        dispatch(
-            addCustomerInfomation({
-                data: submitObj,
-                callback: successCallback,
-                token: account.id_token,
-            }),
-        );
+        if (!loading) {
+            dispatch(
+                addCustomerInfomation({
+                    data: submitObj,
+                    callback: successCallback,
+                    token: account.id_token,
+                }),
+            );
+        }
     };
 
     //Handle Success dialog
@@ -137,12 +141,15 @@ export default function AddCustomer() {
 
     return (
         <React.Fragment>
-            <SuccessDialog
-                isVisible={successDialog}
-                content="Add new Customer successfully!"
-                onPress={handleCloseSuccessDialog}
-            />
+            <React.Fragment>
+                <SuccessDialog
+                    isVisible={successDialog}
+                    content="Add new Customer successfully!"
+                    onPress={handleCloseSuccessDialog}
+                />
+            </React.Fragment>
             <ScrollView>
+                {loading && <LinearProgress />}
                 <InputWrapper>
                     <ImageWrapper>
                         <Image
@@ -155,11 +162,13 @@ export default function AddCustomer() {
                         />
 
                         <Button
+                            disabled={loading}
                             type="clear"
                             title={'Choose photo'}
                             onPress={pickImage}
                         />
                         <Button
+                            disabled={loading}
                             type="clear"
                             title={'Take photo'}
                             onPress={takePicture}
@@ -172,6 +181,7 @@ export default function AddCustomer() {
                         }}
                         render={({ field: { onChange, onBlur, value } }) => (
                             <Input
+                                disabled={loading}
                                 style={{ color: colors.text }}
                                 returnKeyType="next"
                                 onBlur={onBlur}
@@ -197,6 +207,7 @@ export default function AddCustomer() {
                         }}
                         render={({ field: { onChange, onBlur, value } }) => (
                             <Input
+                                disabled={loading}
                                 ref={lNameRef}
                                 style={{ color: colors.text }}
                                 returnKeyType="next"
@@ -225,6 +236,7 @@ export default function AddCustomer() {
                         }}
                         render={({ field: { onChange, onBlur, value } }) => (
                             <Input
+                                disabled={loading}
                                 ref={pNumberRef}
                                 style={{ color: colors.text }}
                                 returnKeyType="next"
@@ -258,6 +270,7 @@ export default function AddCustomer() {
                         }}
                         render={({ field: { onChange, onBlur, value } }) => (
                             <Input
+                                disabled={loading}
                                 ref={addressRef}
                                 style={{ color: colors.text }}
                                 onBlur={onBlur}
@@ -286,6 +299,7 @@ export default function AddCustomer() {
                         }}
                         render={({ field: { onChange, onBlur, value } }) => (
                             <Input
+                                disabled={loading}
                                 ref={addressRef}
                                 style={{ color: colors.text }}
                                 onBlur={onBlur}
@@ -302,7 +316,11 @@ export default function AddCustomer() {
                         )}
                         name="address"
                     />
-                    <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+                    <Button
+                        disabled={loading}
+                        title="Submit"
+                        onPress={handleSubmit(onSubmit)}
+                    />
                 </InputWrapper>
             </ScrollView>
         </React.Fragment>

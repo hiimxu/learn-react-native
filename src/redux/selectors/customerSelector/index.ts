@@ -1,10 +1,13 @@
-export const listCustomerSelector = (state: any) => state.customerList;
+import { RootState } from './../../store/configureStore';
 
-export const customerInfomationSelector = (state: any) =>
+export const listCustomerSelector = (state: RootState) => state.customerList;
+
+export const customerInfomationSelector = (state: RootState) =>
     state.customerInfomation;
 
-export const editCustomerSelector = (state: any) => state.editCustomer;
+export const editCustomerSelector = (state: RootState) => state.editCustomer;
 
-export const addCustomerSelector = (state: any) => state.addCustomer;
+export const addCustomerSelector = (state: RootState) => state.addCustomer;
 
-export const deleteCustomerSelector = (state: any) => state.deleteCustomer;
+export const deleteCustomerSelector = (state: RootState) =>
+    state.deleteCustomer;

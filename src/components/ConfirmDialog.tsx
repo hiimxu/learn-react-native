@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Dialog, Button } from '@rneui/themed';
 import styled from 'styled-components';
-import { Icon } from 'react-native-elements';
+import { Icon, LinearProgress } from 'react-native-elements';
 import { useTheme } from '@react-navigation/native';
 import { HStack, Box } from '@react-native-material/core';
 
@@ -24,6 +24,7 @@ type Props = {
     onConfirm?: () => void;
     onClose?: () => void;
     icon?: string;
+    submitLoading?: boolean;
 };
 
 export default function ConfirmDialog({
@@ -33,6 +34,7 @@ export default function ConfirmDialog({
     onConfirm,
     onClose,
     icon,
+    submitLoading,
 }: Props) {
     const { colors } = useTheme();
 
@@ -42,6 +44,7 @@ export default function ConfirmDialog({
             overlayStyle={{ backgroundColor: colors.border }}
             onBackdropPress={onClose}
         >
+            {submitLoading && <LinearProgress />}
             <Dialog.Title title={title} titleStyle={{ color: colors.text }} />
             <ContentWrapper>
                 {icon && (
@@ -59,10 +62,16 @@ export default function ConfirmDialog({
             <Dialog.Actions>
                 <HStack spacing={10}>
                     <Box>
-                        <Button onPress={onConfirm}>Confirm</Button>
+                        <Button disabled={submitLoading} onPress={onConfirm}>
+                            Confirm
+                        </Button>
                     </Box>
                     <Box>
-                        <Button type="clear" onPress={onClose}>
+                        <Button
+                            disabled={submitLoading}
+                            type="clear"
+                            onPress={onClose}
+                        >
                             Close
                         </Button>
                     </Box>

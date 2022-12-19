@@ -15,6 +15,7 @@ import {
     getListCustomer,
 } from '../../../../redux/actions/creators/customer';
 import { authSelector } from '../../../../redux/selectors/authSelector';
+import { deleteCustomerSelector } from '../../../../redux/selectors/customerSelector';
 
 const styles = StyleSheet.create({
     tinyLogo: {
@@ -38,6 +39,7 @@ function CustomerItem({ customer }: Props) {
 
     //Redux state
     const { account } = useSelector(authSelector);
+    const { loading } = useSelector(deleteCustomerSelector);
 
     //Redux hooks
     const dispatch = useDispatch();
@@ -81,6 +83,7 @@ function CustomerItem({ customer }: Props) {
                     content={`Do you want delete customer ${customer?.name}?`}
                     onClose={() => setDeleteDialog(false)}
                     onConfirm={handleConfirmDelete}
+                    submitLoading={loading}
                 />
                 <SuccessDialog
                     isVisible={successDialog}

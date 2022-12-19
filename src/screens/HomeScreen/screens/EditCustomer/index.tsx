@@ -7,7 +7,7 @@ import {
     useRoute,
     useTheme,
 } from '@react-navigation/native';
-import { Input, Button } from 'react-native-elements';
+import { Input, Button, LinearProgress } from 'react-native-elements';
 import { useForm, Controller } from 'react-hook-form';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -16,7 +16,10 @@ import styled from 'styled-components';
 //Redux
 import SuccessDialog from '../../../../components/SuccessDialog';
 import { useDispatch, useSelector } from 'react-redux';
-import { customerInfomationSelector } from '../../../../redux/selectors/customerSelector';
+import {
+    addCustomerSelector,
+    customerInfomationSelector,
+} from '../../../../redux/selectors/customerSelector';
 import {
     editCustomerInfomation,
     getCustomerInfomation,
@@ -69,6 +72,7 @@ export default function EditCustomer() {
     //Redux state
     const { account } = useSelector(authSelector);
     const { loading, data } = useSelector(customerInfomationSelector);
+    const { loading: submitLoading } = useSelector(addCustomerSelector);
 
     //Redux hooks
     const dispatch = useDispatch();
@@ -186,6 +190,7 @@ export default function EditCustomer() {
                 </View>
             ) : (
                 <ScrollView>
+                    {submitLoading && <LinearProgress />}
                     <Wrapper>
                         <ImageWrapper>
                             {image && (
@@ -197,11 +202,13 @@ export default function EditCustomer() {
                                 />
                             )}
                             <Button
+                                disabled={submitLoading}
                                 type="clear"
                                 title={'Choose photo'}
                                 onPress={pickImage}
                             />
                             <Button
+                                disabled={submitLoading}
                                 type="clear"
                                 title={'Take photo'}
                                 onPress={takePicture}
@@ -216,6 +223,7 @@ export default function EditCustomer() {
                                 field: { onChange, onBlur, value },
                             }) => (
                                 <Input
+                                    disabled={submitLoading}
                                     style={{ color: colors.text }}
                                     returnKeyType="next"
                                     onBlur={onBlur}
@@ -243,6 +251,7 @@ export default function EditCustomer() {
                                 field: { onChange, onBlur, value },
                             }) => (
                                 <Input
+                                    disabled={submitLoading}
                                     ref={lNameRef}
                                     style={{ color: colors.text }}
                                     returnKeyType="next"
@@ -273,6 +282,7 @@ export default function EditCustomer() {
                                 field: { onChange, onBlur, value },
                             }) => (
                                 <Input
+                                    disabled={submitLoading}
                                     ref={pNumberRef}
                                     style={{ color: colors.text }}
                                     returnKeyType="next"
@@ -309,6 +319,7 @@ export default function EditCustomer() {
                                 field: { onChange, onBlur, value },
                             }) => (
                                 <Input
+                                    disabled={submitLoading}
                                     ref={addressRef}
                                     style={{ color: colors.text }}
                                     onBlur={onBlur}
@@ -339,6 +350,7 @@ export default function EditCustomer() {
                                 field: { onChange, onBlur, value },
                             }) => (
                                 <Input
+                                    disabled={submitLoading}
                                     ref={addressRef}
                                     style={{ color: colors.text }}
                                     onBlur={onBlur}
@@ -357,7 +369,11 @@ export default function EditCustomer() {
                             )}
                             name="address"
                         />
-                        <Button title="Edit" onPress={handleSubmit(onSubmit)} />
+                        <Button
+                            disabled={submitLoading}
+                            title="Edit"
+                            onPress={handleSubmit(onSubmit)}
+                        />
                     </Wrapper>
                 </ScrollView>
             )}
