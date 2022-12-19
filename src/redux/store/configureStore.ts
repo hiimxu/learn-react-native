@@ -14,6 +14,7 @@ import {
     AddCustomer,
     DeleteCustomer,
 } from '../reducers/customer';
+import { ListProduct } from '../reducers/product';
 
 const loginConfig = {
     key: 'loginAccount',
@@ -27,13 +28,21 @@ const themeConfig = {
     blacklist: ['errMess'],
 };
 const rootReducer = combineReducers({
+    //Authenticate
     loginAccount: persistReducer(loginConfig, LoginAccount),
+
+    //Theme
     theme: persistReducer(themeConfig, Theme),
+
+    //Manage customer
     customerList: CustomerList,
     customerInfomation: CustomerInfomation,
     editCustomer: EditCustomer,
     addCustomer: AddCustomer,
     deleteCustomer: DeleteCustomer,
+
+    //Manage product
+    listProduct: ListProduct,
 });
 
 export const ConfigureStore = () => {
