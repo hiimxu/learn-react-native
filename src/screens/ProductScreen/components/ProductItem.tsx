@@ -76,8 +76,10 @@ export default function ProductItem({ product, onPress, onLongPress }: Props) {
                     {product.name} -{' '}
                     {product.status === 1 ? (
                         <StatusText>Accepted</StatusText>
+                    ) : product.status === 2 ? (
+                        <StatusText>Rejected</StatusText>
                     ) : (
-                        <StatusText>Reject</StatusText>
+                        <LabelText>Processing</LabelText>
                     )}
                 </Title>
                 <PriceText>
