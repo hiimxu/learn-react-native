@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
+import { formatCurrency } from 'react-native-format-currency';
 import Avatar from '../../../components/Avatar';
+import { useTheme } from '@react-navigation/native';
 
 const Wrapper = styled(TouchableOpacity)`
     display: flex;
@@ -24,9 +26,15 @@ const StatusText = styled(Text)`
     color: green;
 `;
 
+const LabelText = styled(Text)`
+    font-size: 16px;
+    font-weight: 600;
+`;
+
 const PriceText = styled(Text)`
     font-size: 16px;
     font-weight: 600;
+    color: #f15355;
 `;
 
 type Props = {
@@ -36,24 +44,35 @@ type Props = {
         code: string;
         image: string;
         unit: string;
-        price: string;
+        price: number;
         createdDate: string;
         updatedDate: string;
         createdBy: string;
         updatedBy: string;
         status: number;
         reason: string;
+        totalItems: number;
     };
     onPress?: () => void;
     onLongPress?: () => void;
 };
 
 export default function ProductItem({ product, onPress, onLongPress }: Props) {
+    //Theme
+    const { colors } = useTheme();
     return (
-        <Wrapper onPress={onPress} onLongPress={onLongPress}>
+        <Wrapper
+            onPress={onPress}
+            onLongPress={onLongPress}
+            style={{
+                borderBottomWidth: 1,
+                borderBottomColor: colors.border,
+                backgroundColor: colors.card,
+            }}
+        >
             <Avatar uri={product.image} />
             <ContentWrapper>
-                <Title>
+                <Title style={{ color: colors.text }}>
                     {product.name} -{' '}
                     {product.status === 1 ? (
                         <StatusText>Accepted</StatusText>
@@ -61,10 +80,31 @@ export default function ProductItem({ product, onPress, onLongPress }: Props) {
                         <StatusText>Reject</StatusText>
                     )}
                 </Title>
-                <PriceText>{product.price}</PriceText>
-                <Text>{product.code}</Text>
-                <Text>{product.reason}</Text>
-                <Text>Create by {product.createdBy}</Text>
+                <PriceText>
+                    {formatCurrency({ amount: product.price, code: 'VND' })[0]}
+                </PriceText>
+                <Text style={{ color: colors.text }}>
+                    <LabelText>Code:</LabelText> {product.code}
+                </Text>
+                <Text style={{ color: colors.text }}>
+                    <LabelText>Quantity:</LabelText>{' '}
+                    <Text style={{ color: '#f15355' }}>
+                        {product.totalItems}
+                    </Text>
+                </Text>
+                <Text style={{ color: colors.text }}>
+                    <LabelText>Reason: </LabelText>
+                    {product.reason ? product.reason : 'No reason'}
+                </Text>
+                <Text
+                    style={{
+                        color: colors.text,
+                        textDecorationLine: 'underline',
+                        textDecorationColor: colors.text,
+                    }}
+                >
+                    Create by {product.createdBy}
+                </Text>
             </ContentWrapper>
         </Wrapper>
     );
